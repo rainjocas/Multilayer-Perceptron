@@ -1,5 +1,5 @@
 """
-Author: Rain Jocas
+Author: Rain Jocas, Temi Agunloye
 Date: 2/1/2025
 """
 import matplotlib.pyplot as plt
@@ -41,7 +41,7 @@ plt.title( "Training Data for make_blobs")
 plt.show()
 
 #make dataset
-X, y = make_circles(n_samples=100, shuffle=True, noise=0.02, random_state=None, factor=0.8)
+X, y = make_circles(n_samples=400, shuffle=True, noise=0.08, random_state=None, factor=0.8)
 
 #train data
 X_train, X_test, y_train, y_test = train_test_split(X , y, test_size =0.4, random_state =2)
@@ -52,10 +52,27 @@ plt.title( "Training Data for make_circles" )
 plt.show()
 
 
-clf = MLPClassifier( hidden_layer_sizes =5, random_state =10)
+clf = MLPClassifier(n_layers_ = 10, hidden_layer_sizes =5, random_state =10)
 clf.fit(X_train , y_train) # This command trains the MLP on the training data
 
 
 print_scores()
-
 plot_decision_boundaries(X_train, y_train, MLPClassifier, hidden_layer_sizes =(50, 20, 30))
+
+def compare_optimization(X, y, X_train , y_train):
+    """ Temi Agunloye
+    
+    NOTE: Add Documentation
+    """
+
+    plot_decision_boundaries(X_train, y_train, MLPClassifier, hidden_layer_sizes =(50, 20, 30))
+
+def compare_network_architecture(X, y, X_train , y_train):
+    """ Rain Jocas
+    
+    NOTE: Add Documentation
+    """
+    clf = MLPClassifier(n_layers_ = 10, hidden_layer_sizes =5, random_state =10)
+    clf.fit(X_train , y_train) # This command trains the MLP on the training data
+    
+    plot_decision_boundaries(X_train, y_train, MLPClassifier, hidden_layer_sizes =(50, 20, 30))
