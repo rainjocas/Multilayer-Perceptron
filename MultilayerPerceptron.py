@@ -20,6 +20,11 @@ def print_scores():
     print(clf.score(X_test , y_test))
 
 def plot_decision_boundaries(X, y, model_class, plotTitle, **model_params):
+    """
+    Plots decision boundries as given by MLP predictions
+
+    Author: (We took this from the slides and made some minor tweaks)
+    """
     model = model_class(**model_params, random_state=10)
     model.fit(X, y)
     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -99,6 +104,11 @@ def n_layers_test(X, y, X_train, X_test, y_train, y_test):
     return results
 
 def activation_test(X, y, X_train, X_test, y_train, y_test):
+    """
+    Tests MLP with different activation types and returns a dataframe various metrics
+
+    Author: Rain Jocas
+    """
     scores = []
     bestLosses = []
     runTimes = []
@@ -124,8 +134,10 @@ def activation_test(X, y, X_train, X_test, y_train, y_test):
 
 
 def compare_network_architecture(X, y, X_train, X_test, y_train, y_test):
-    """ Rain Jocas
-    NOTE: Add Documentation
+    """
+    Runs layer and activation type testing and prints results
+
+    Author: Rain Jocas
     """
     nLayers = n_layers_test(X, y, X_train, X_test, y_train, y_test)
     activations = activation_test(X, y, X_train, X_test, y_train, y_test)
@@ -135,6 +147,9 @@ def compare_network_architecture(X, y, X_train, X_test, y_train, y_test):
 
 def run_all():
     """
+    Runs all network architecture and optimization tests for the make_blobs and make_circles datasets
+
+    Authors: Rain Jocas, Temi Agunloye 
     """
     #make dataset
     X, y = make_blobs( n_samples=400, centers=4, cluster_std =2, random_state =10)
