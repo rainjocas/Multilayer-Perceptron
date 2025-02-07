@@ -11,14 +11,6 @@ from sklearn.datasets import make_blobs
 from sklearn.datasets import make_circles
 import time
 
-def print_scores():
-    np.set_printoptions( suppress=True,
-    precision =2)
-    print(clf.predict_proba(X_test[ 0:3, :]))
-    print(clf.predict(X_test[ 0:3, :]))
-    print(y_test[0:3])
-    print(clf.score(X_test , y_test))
-
 def plot_decision_boundaries(X, y, model_class, plotTitle, **model_params):
     """
     Plots decision boundries as given by MLP predictions
@@ -38,13 +30,32 @@ def plot_decision_boundaries(X, y, model_class, plotTitle, **model_params):
     plt.show()
 
 
-def compare_optimization(X, y, X_train , y_train):
+def compare_optimization(X, y, X_train , y_train, X_test, y_test, solvers, learning_rates):
     """ Temi Agunloye
-    
-    NOTE: Add Documentation
+    Compares different optimization solvers and learning rates by running experiments on MLPClassifier.
     """
+    results = []
+    for solver in solvers:
+        for lr in learning_rates:
+            start_time = time.time()
 
-    plot_decision_boundaries(X_train, y_train, MLPClassifier, hidden_layer_sizes =(50, 20, 30))
+            clf = MLPClassifier(hidden_layer_sizes=(50, 20), solver=solver, learning_rate_init=lr, random_state=10)
+            clf.fit(X_train, y_train)
+
+            accuracy = clf.score(X_test, y_test)   
+            best_loss = clf.loss_                   
+            run_time = time.time() - start_time
+
+            results.append((solver, lr, accuracy, best_loss, run_time))
+
+            plot_decision_boundaries(
+                X_train, y_train, MLPClassifier,
+                plotTitle=f"{solver.upper()} Solver - Learning Rate = {lr}",
+                hidden_layer_sizes=(50, 20), solver=solver, learning_rate_init=lr
+            )
+    results_df = pd.DataFrame(results, columns=['Solver', 'Learning Rate', 'Accuracy', 'Best Loss', 'Run Time'])
+    print(results_df)
+    return results_df
 
 def network_architecture_test(X, y, X_train, X_test, y_train, y_test, layerSize, activationType, plotTitle):
     """
@@ -151,7 +162,7 @@ def run_all():
 
     Authors: Rain Jocas, Temi Agunloye 
     """
-    #make dataset
+    # --- Dataset 1: make_blobs ---
     X, y = make_blobs( n_samples=400, centers=4, cluster_std =2, random_state =10)
 
     #train data
@@ -165,7 +176,10 @@ def run_all():
     #Run Network Architecture tests
     compare_network_architecture(X, y, X_train, X_test, y_train, y_test)
 
-    #make dataset
+    #Run optimization tests for the blobs dataset
+    compare_optimization(X, y, X_train, y_train, X_test, y_test, solvers, learning_rates)
+
+    # --- Dataset 2: make_circles ---
     X, y = make_circles(n_samples=400, shuffle=True, noise=0.08, random_state=None, factor=0.8)
 
     #train data
@@ -178,5 +192,8 @@ def run_all():
 
     #Run Network Architecture tests
     compare_network_architecture(X, y, X_train, X_test, y_train, y_test)
+
+    #Run optimization tests for the circles dataset
+    compare_optimization(X, y, X_train, y_train, X_test, y_test, solvers, learning_rates)
 
 run_all()
