@@ -162,6 +162,10 @@ def run_all():
 
     Authors: Rain Jocas, Temi Agunloye 
     """
+    #Define solvers and learning rates
+    solvers = ['sgd', 'adam']
+    learning_rates = [0.0001, 0.01, 0.1]
+    
     # --- Dataset 1: make_blobs ---
     X, y = make_blobs( n_samples=400, centers=4, cluster_std =2, random_state =10)
 
